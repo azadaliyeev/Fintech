@@ -1,0 +1,16 @@
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/bin/Debug/net8.0/Fintech.Domain.deps.json
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/bin/Debug/net8.0/Fintech.Domain.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/bin/Debug/net8.0/Fintech.Domain.pdb
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/bin/Debug/net8.0/Fintech.Shared.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/bin/Debug/net8.0/Fintech.Shared.pdb
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.csproj.AssemblyReference.cache
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.AssemblyInfoInputs.cache
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.AssemblyInfo.cs
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.csproj.CoreCompileInputs.cache
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech..895E9A80.Up2Date
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/refint/Fintech.Domain.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.pdb
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/ref/Fintech.Domain.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Domain/obj/Debug/net8.0/Fintech.Domain.sourcelink.json

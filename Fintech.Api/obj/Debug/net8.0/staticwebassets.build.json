@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "B3Mv29ZmRRAaeXUl0LI50JDeF5otlQ0A8IwybSr0sv0=",
+  "Source": "Fintech.Api",
+  "BasePath": "_content/Fintech.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

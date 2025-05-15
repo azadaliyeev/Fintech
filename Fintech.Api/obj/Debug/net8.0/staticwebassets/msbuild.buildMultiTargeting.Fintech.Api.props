@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/Fintech.Api.props" />
+</Project>

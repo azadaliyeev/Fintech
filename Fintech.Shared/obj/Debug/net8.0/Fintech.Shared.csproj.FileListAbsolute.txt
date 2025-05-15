@@ -1,0 +1,13 @@
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/bin/Debug/net8.0/Fintech.Shared.deps.json
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/bin/Debug/net8.0/Fintech.Shared.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/bin/Debug/net8.0/Fintech.Shared.pdb
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.AssemblyInfoInputs.cache
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.AssemblyInfo.cs
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.csproj.CoreCompileInputs.cache
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/refint/Fintech.Shared.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.pdb
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/ref/Fintech.Shared.dll
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.csproj.AssemblyReference.cache
+/Users/azadaliyev/Desktop/Fintech/Fintech.Shared/obj/Debug/net8.0/Fintech.Shared.sourcelink.json
