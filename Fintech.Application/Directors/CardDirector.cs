@@ -22,10 +22,6 @@ public class CardDirector(ICardBuilder cardBuilder)
         cardBuilder.SetBalance(card.Balance);
     }
 
-    private void GetAll1()
-    {
-        
-    }
     
 
     private void GetByFilter(List<string> filters, Card card)
