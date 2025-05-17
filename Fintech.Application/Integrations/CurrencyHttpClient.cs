@@ -5,18 +5,11 @@ using Fintech.Domain.Models.Currency;
 
 namespace Fintech.Application.Integrations;
 
-public class CurrencyHttpClient
+public class CurrencyHttpClient(HttpClient httpClient)
 {
-    private readonly HttpClient _httpClient;
-
-    public CurrencyHttpClient(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
-
     public async Task<List<CurrencyData>> GetCurrency()
     {
-        var response = await _httpClient.GetAsync("https://www.cbar.az/currencies/02.05.2025.xml");
+        var response = await httpClient.GetAsync("https://www.cbar.az/currencies/02.05.2025.xml");
 
         if (!response.IsSuccessStatusCode)
         {
@@ -32,8 +25,8 @@ public class CurrencyHttpClient
         var valutes = doc.Descendants("Valute")
             .Select(x => new CurrencyData()
             {
-                Code = (string)x.Attribute("Code"),
-                Value = (decimal)x.Element("Value"),
+                Code = (string)x.Attribute("Code")!,
+                Value = (decimal)x.Element("Value")!,
             }).Where(x => currencies.Contains(x.Code)).ToList();
 
 
