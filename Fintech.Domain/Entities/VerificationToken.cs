@@ -1,13 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Fintech.Domain.Entities;
 
-public class VerificationToken
+public class VerificationToken(string id, string userId, string token, bool isUsed)
 {
-    public string Id { get; set; } = null!;
-    public string UserId { get; set; } = null!;
-    public string Token { get; set; } = null!;
-    public DateTime ExpireDate { get; set; }
-    public bool IsUsed { get; set; }
+    public VerificationToken() : this(string.Empty, string.Empty, string.Empty, false)
+    {
+    }
 
-    public virtual User User { get; set; }
+    [StringLength(100)] public string Id { get; set; } = id;
+    [StringLength(100)] public string UserId { get; set; } = userId;
+    [StringLength(100)] public string Token { get; set; } = token;
+    public DateTime? ExpireDate { get; set; }
+    public bool IsUsed { get; set; } = isUsed;
+
+    public virtual User User { get; set; } = null!;
 }
-

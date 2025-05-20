@@ -5,7 +5,7 @@ namespace Fintech.Application.Directors;
 
 public class UserDirector(IUserBuilder userBuilder)
 {
-    public void Build(List<string>? filters, User user)
+    public void Build(List<string?>? filters, User user)
     {
         if (filters != null)
         {
@@ -23,7 +23,7 @@ public class UserDirector(IUserBuilder userBuilder)
     }
 
 
-    private void GetByFilter(List<string> filters, User user)
+    private void GetByFilter(List<string?> filters, User user)
     {
         foreach (var key in filters)
         {

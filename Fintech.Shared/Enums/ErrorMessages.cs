@@ -21,4 +21,5 @@ public enum ErrorMessages
     CardNotExists,
     AlreadyBlocked,
     AlreadyDeleted,
+    VerificationAlreadySent
 }

@@ -15,7 +15,6 @@ public class VerificationTokenEntityConfiguration : IEntityTypeConfiguration<Ver
             .HasDefaultValueSql("now() + interval '15 minutes'");
         builder.Property(x => x.IsUsed).HasColumnName("is_used").HasDefaultValue(false);
         builder.Property(x => x.Token).HasColumnName("token").IsRequired();
-
         builder.HasOne(x => x.User)
             .WithOne(x => x.VerificationToken)
             .HasForeignKey<VerificationToken>(x => x.UserId);

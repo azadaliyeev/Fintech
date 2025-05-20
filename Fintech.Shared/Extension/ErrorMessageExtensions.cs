@@ -25,6 +25,7 @@ public static class ErrorMessageExtensions
             ErrorMessages.CardNotExists => "Card not exists.",
             ErrorMessages.AlreadyBlocked => "Already blocked.",
             ErrorMessages.AlreadyDeleted => "Already deleted.",
+            ErrorMessages.VerificationAlreadySent => "Verification already sent.",
             _ => "Unknown error."
         };
     }

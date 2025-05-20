@@ -10,7 +10,7 @@ namespace Fintech.Domain.Services.Users;
 public interface IUserService
 {
     Task CreateInAsync(User user);
-    Task<ServiceResult<UserDto?>> GetByIdAsync(string id);
+    Task<ServiceResult<UserDto>> GetByIdAsync(string id);
     Task<bool> IsUserExistsAsync(string id);
     Task<ServiceResult> BlockUserAsync(string userId);
     Task<ServiceResult> VerifyPasswordAsync(PasswordVerificationRequest request);
@@ -24,4 +24,6 @@ public interface IUserService
     Task<ServiceResult<Dictionary<string, object>>> GetUserByFilterAsync(UserFilteredRequest request);
 
     Task<ServiceResult> DeleteUserAsync(string userId);
+
+    Task CheckUserVerificationAsync();
 }

@@ -1,5 +1,5 @@
-using Fintech.Api.BackgroundServices;
 using Fintech.Api.Filters;
+using Fintech.Application.BackgroundServices;
 using Fintech.Application.Extensions;
 using Fintech.Repository.Extensions;
 using Newtonsoft.Json.Converters;
@@ -22,7 +22,6 @@ builder.Services.AddControllers(opt =>
         allowIntegerValues: false));
 });
 
-builder.Services.AddHostedService<CurrencyBackgroundService>();
 
 
 

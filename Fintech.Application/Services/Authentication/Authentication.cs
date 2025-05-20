@@ -25,13 +25,10 @@ public class Authentication(
     public async Task<ServiceResult<SignUpResponse>> SignUpAsync(SignUpRequest request)
     {
         var checkPhone = await unitOfWork.UserRepository.ExistByPhoneNumberAsync(request.PhoneNumber);
-        var checkEmail = await unitOfWork.UserRepository.ExistByEmailAsync(request.Email);
 
         if (checkPhone)
             return ServiceResult<SignUpResponse>.Fail(ErrorMessages.PhoneNumberExists.GetMessage());
 
-        if (checkEmail)
-            return ServiceResult<SignUpResponse>.Fail(ErrorMessages.EmailExists.GetMessage());
 
         var user = mapper.Map<User>(request);
 

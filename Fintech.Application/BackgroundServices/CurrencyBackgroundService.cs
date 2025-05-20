@@ -1,10 +1,11 @@
 using Fintech.Domain.Services.Currency;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace Fintech.Api.BackgroundServices;
+namespace Fintech.Application.BackgroundServices;
 
 public class CurrencyBackgroundService(
-    IServiceProvider serviceProvider,
-    ILogger<CurrencyBackgroundService> logger)
+    IServiceProvider serviceProvider)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

@@ -8,6 +8,6 @@ public record AccountWithCard(
     decimal Balance,
     string AccountType,
     string Currency,
-    string Status,
+    string? Status,
     List<CardDto> Cards);
     

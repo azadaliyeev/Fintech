@@ -11,7 +11,7 @@ public class AccountEntityConfiguration : IEntityTypeConfiguration<Account>
         builder.HasKey(a => a.Id);
         builder.Property(a => a.Id).HasColumnName("id");
         builder.Property(a => a.Iban).IsRequired().HasMaxLength(29).HasColumnName("iban");
-        builder.Property(a => a.Balance).IsRequired().HasColumnName("balance");
+        builder.Property(a => a.Balance).HasColumnName("balance");
         builder.Property(a => a.AccountType).IsRequired().HasMaxLength(20).HasColumnName("account_type").HasDefaultValue("Master");
         builder.Property(a => a.CreateDate).IsRequired().HasColumnName("create_date").HasDefaultValueSql("now()");
         builder.Property(a => a.Currency).IsRequired().HasMaxLength(3).HasColumnName("currency").HasDefaultValue("AZN");

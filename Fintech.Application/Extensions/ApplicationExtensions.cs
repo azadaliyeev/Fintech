@@ -1,4 +1,5 @@
 using System.Reflection;
+using Fintech.Application.BackgroundServices;
 using Fintech.Application.Builders;
 using Fintech.Application.Directors;
 using Fintech.Application.ExceptionHandler;
@@ -29,9 +30,15 @@ public static class ApplicationExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+        services.AddHostedService<CurrencyBackgroundService>();
+        services.AddHostedService<CheckUserVerifiedBackgroundService>();
+
+
         services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
 
-        services.AddHttpClient<CurrencyHttpClient>();
+
+        services.AddScoped<CurrencyHttpClient>();
+        services.AddHttpClient();
 
         services.AddScoped<ICurrencyService, CurrencyService>();
         services.AddScoped<IEmailService, EmailService>();

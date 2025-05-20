@@ -8,8 +8,6 @@ public class CreateAccountRequestValidator : AbstractValidator<CreateAccountRequ
 {
     public CreateAccountRequestValidator()
     {
-        RuleFor(x => x.Balance).GreaterThanOrEqualTo(0)
-            .WithMessage("Balance must be greater than or equal to 0");
 
         RuleFor(x => x.UserId).Length(36)
             .WithMessage("UserId must be 36 characters long");

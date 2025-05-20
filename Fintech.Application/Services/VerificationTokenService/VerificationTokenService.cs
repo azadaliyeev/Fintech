@@ -26,7 +26,6 @@ public class VerificationTokenService(IUnitOfWork unitOfWork) : IVerificationTok
     {
         var verificationToken = await unitOfWork.VerificationTokenRepository.GetByTokenAsync(token);
 
-
         if (verificationToken is null)
             return TokenValidationResult.Fail("Verification token not found");
 
@@ -37,10 +36,16 @@ public class VerificationTokenService(IUnitOfWork unitOfWork) : IVerificationTok
             return TokenValidationResult.Fail("Verification token expired");
 
         var user = await unitOfWork.UserRepository.GetByIdAsync(verificationToken.UserId);
+        if (user is { Id: "" })
+            return TokenValidationResult.Fail("User not found");
         verificationToken.IsUsed = true;
         unitOfWork.VerificationTokenRepository.Update(verificationToken);
-
-
         return TokenValidationResult.Success("Verification token verified successfully", user!.Id);
+    }
+
+    public async Task DeleteTokensAsync(List<User> users)
+    {
+        var usersId = users.Select(x => x.Id).ToList();
+        await unitOfWork.VerificationTokenRepository.DeleteTokensAysnc(usersId);
     }
 }

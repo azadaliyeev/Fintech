@@ -7,10 +7,7 @@ public class SignUpRequestValidator : AbstractValidator<SignUpRequest>
 {
     public SignUpRequestValidator()
     {
-        RuleFor(x => x.Email).EmailAddress().WithMessage("Invalid email format")
-            .NotEmpty().WithMessage("Email is required");
         
-
         RuleFor(x => x.Password).MinimumLength(8).WithMessage("Password must be at least 8 characters long")
             .Matches(@".*\d.*")
             .Matches(@".*[A-Z].*")

@@ -8,6 +8,7 @@ public interface IVerificationTokenRepository
     void Update(VerificationToken verificationToken);
     void Delete(VerificationToken verificationToken);
     Task<VerificationToken?> GetByUserId(string userId);
-
     Task<VerificationToken?> GetByTokenAsync(string token);
+
+    Task DeleteTokensAysnc(List<string> users);
 }

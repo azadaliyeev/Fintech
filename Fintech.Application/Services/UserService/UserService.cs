@@ -27,6 +27,25 @@ public class UserService(
     UserDirector userDirector,
     IMapper mapper) : IUserService
 {
+    public async Task CheckUserVerificationAsync()
+    {
+        var users = await unitOfWork.UserRepository.GetAll()
+            .Include(x => x.VerificationToken)
+            .Where(x => x.VerificationToken != null).ToListAsync();
+
+        if (!users.Any())
+            return;
+
+        var nonVerifiedUsers = users.Where(x => x.VerificationToken!.ExpireDate < DateTime.UtcNow).ToList();
+
+        if (!nonVerifiedUsers.Any())
+            return;
+
+
+        await unitOfWork.UserRepository.DeleteDataFromNonVerifiedUsers(nonVerifiedUsers);
+        await verificationTokenService.DeleteTokensAsync(nonVerifiedUsers);
+    }
+
     public async Task<ServiceResult> DeleteUserAsync(string userId)
     {
         if (string.IsNullOrEmpty(userId))
@@ -34,7 +53,7 @@ public class UserService(
 
         var user = await unitOfWork.UserRepository.GetByIdAsync(userId);
 
-        if (user is null)
+        if (user is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
         if (user.Status == Status.Deleted.Get())
@@ -47,7 +66,6 @@ public class UserService(
         return ServiceResult.Success(HttpStatusCode.NoContent);
     }
 
-
     public async Task<ServiceResult> BlockUserAsync(string userId)
     {
         if (string.IsNullOrEmpty(userId))
@@ -55,7 +73,7 @@ public class UserService(
 
         var user = await unitOfWork.UserRepository.GetByIdAsync(userId);
 
-        if (user is null)
+        if (user is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
         if (user.Status == Status.Blocked.Get())
@@ -72,15 +90,14 @@ public class UserService(
         return ServiceResult.Success(HttpStatusCode.NoContent);
     }
 
-
     public async Task<ServiceResult<Dictionary<string, object>>> GetUserByFilterAsync(UserFilteredRequest request)
     {
         var user = await unitOfWork.UserRepository.GetByIdAsync(request.UserId);
 
-        if (user is null)
+        if (user is { Id: "" })
             return ServiceResult<Dictionary<string, object>>.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
-        userDirector.Build(request.Fields, user);
+        userDirector.Build(request.Fields ?? new List<string?>(), user);
 
         var result = userDirector.GetResult();
 
@@ -109,7 +126,7 @@ public class UserService(
     {
         var user = await unitOfWork.UserRepository.GetByIdAsync(userId);
 
-        if (user is null)
+        if (user is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
         if (!user.IsVerified)
@@ -141,20 +158,23 @@ public class UserService(
 
     public async Task<ServiceResult> EmailVerificationRequestAsync(UserVerificationRequest request)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+        var user = await unitOfWork.UserRepository.GetAll()
+            .Include(x => x.VerificationToken).FirstOrDefaultAsync(x => x.Id == request.UserId) ?? new User();
 
-        if (user is null)
+        if (user is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
         if (user.IsVerified)
             return ServiceResult.Fail(ErrorMessages.UserAlreadyVerified.GetMessage());
+
+        if (user.VerificationToken is not null && user.VerificationToken.ExpireDate > DateTime.UtcNow)
+            return ServiceResult.Fail(ErrorMessages.VerificationAlreadySent.GetMessage());
 
         var verificationToken = await verificationTokenService.CreateTokenAsync(request.UserId);
 
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
         user.Email = request.Email;
-
 
         unitOfWork.UserRepository.Update(user);
         await unitOfWork.CommitAsync();
@@ -192,14 +212,14 @@ public class UserService(
         await accountService.CreateInAsync(user.Id);
     }
 
-    public async Task<ServiceResult<UserDto?>> GetByIdAsync(string id)
+    public async Task<ServiceResult<UserDto>> GetByIdAsync(string id)
     {
         var user = await unitOfWork.UserRepository.GetByIdAsync(id);
 
-        if (user is null)
-            ServiceResult<User>.Fail(ErrorMessages.UserNotExistsId.GetMessage());
+        if (user is { Id: "" })
+            return ServiceResult<UserDto>.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
-        return ServiceResult<UserDto?>.Success(mapper.Map<UserDto>(user));
+        return ServiceResult<UserDto>.Success(mapper.Map<UserDto>(user));
     }
 
     public async Task<bool> IsUserExistsAsync(string id) => await unitOfWork.UserRepository.ExistByIdAsync(id);

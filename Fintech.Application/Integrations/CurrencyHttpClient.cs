@@ -5,31 +5,40 @@ using Fintech.Domain.Models.Currency;
 
 namespace Fintech.Application.Integrations;
 
-public class CurrencyHttpClient(HttpClient httpClient)
+public class CurrencyHttpClient(IHttpClientFactory httpClient)
 {
     public async Task<List<CurrencyData>> GetCurrency()
     {
-        var response = await httpClient.GetAsync("https://www.cbar.az/currencies/02.05.2025.xml");
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            throw new Exception("Error fetching currency data");
-        }
+            var client = httpClient.CreateClient();
+            var response = await client.GetAsync("https://www.cbar.az/currencies/02.05.2025.xml");
 
-        var content = await response.Content.ReadAsStringAsync();
-        XDocument doc = XDocument.Parse(content);
-
-        var currencies = new[] { "USD", "EUR", "AZN", "RUB", "TRY" };
-
-
-        var valutes = doc.Descendants("Valute")
-            .Select(x => new CurrencyData()
+            if (!response.IsSuccessStatusCode)
             {
-                Code = (string)x.Attribute("Code")!,
-                Value = (decimal)x.Element("Value")!,
-            }).Where(x => currencies.Contains(x.Code)).ToList();
+                throw new Exception("Error fetching currency data");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            XDocument doc = XDocument.Parse(content);
+
+            var currencies = new[] { "USD", "EUR", "AZN", "RUB", "TRY" };
 
 
-        return valutes;
+            var valutes = doc.Descendants("Valute")
+                .Select(x => new CurrencyData()
+                {
+                    Code = (string)x.Attribute("Code")!,
+                    Value = (decimal)x.Element("Value")!,
+                }).Where(x => currencies.Contains(x.Code)).ToList();
+
+
+            return valutes;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return new List<CurrencyData>();
+        }
     }
 }

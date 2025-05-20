@@ -9,8 +9,8 @@ namespace Fintech.Api.Controllers;
 public class UserController(IUserService userService) : CustomBaseController
 {
     [HttpGet]
-    public async Task<IActionResult> GetUserById(string Id) =>
-        CreateActionResult(await userService.GetByIdAsync(Id));
+    public async Task<IActionResult> GetUserById(string id) =>
+        CreateActionResult(await userService.GetByIdAsync(id));
 
     [HttpGet("{pageNumber:int}/{pageSize:int}")]
     public async Task<IActionResult> GetUsersByPagination(int pageNumber, int pageSize) =>

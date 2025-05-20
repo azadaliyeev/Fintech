@@ -23,4 +23,10 @@ public class VerificationTokenRepository(
 
     public async Task<VerificationToken?> GetByTokenAsync(string token) =>
         await Context.VerificationTokens.FirstOrDefaultAsync(x => x.Token == token);
+
+    public async Task DeleteTokensAysnc(List<string> usersId)
+    {
+        await Context.VerificationTokens.Where(x => usersId.Contains(x.UserId))
+            .ExecuteDeleteAsync();
+    }
 }

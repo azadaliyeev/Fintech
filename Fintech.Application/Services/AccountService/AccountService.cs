@@ -1,4 +1,3 @@
-using System.Dynamic;
 using System.Net;
 using AutoMapper;
 using Fintech.Application.Directors;
@@ -15,7 +14,6 @@ using Fintech.Shared.Enums;
 using Fintech.Shared.Extension;
 using Fintech.Shared.Helpers;
 using Fintech.Shared.ServiceResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fintech.Application.Services.AccountService;
@@ -42,8 +40,7 @@ public class AccountService(
 
         return ServiceResult.Success(HttpStatusCode.NoContent);
     }
-
-
+    
     public async Task<ServiceResult> InactiveAccountAsync(InactiveAccountRequest request)
     {
         var acc = await unitOfWork.AccountRepository.Where(x => x.UserId == request.UserId && x.Iban == request.Iban)
@@ -202,7 +199,6 @@ public class AccountService(
         {
             Id = Guid.NewGuid().ToString(),
             Iban = GenerateIban(),
-            Balance = request.Balance,
             AccountType = request.AccountType.ToString(),
             Currency = request.Currencies.ToString(),
             UserId = request.UserId,

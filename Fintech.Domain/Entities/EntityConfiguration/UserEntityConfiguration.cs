@@ -12,7 +12,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Id).HasColumnName("id");
         builder.Property(u => u.FirstName).HasMaxLength(50).HasColumnName("first_name");
         builder.Property(u => u.LastName).HasMaxLength(50).HasColumnName("last_name");
-        builder.Property(u => u.Email).IsRequired().HasMaxLength(100).HasColumnName("email");
+        builder.Property(u => u.Email).HasMaxLength(100).HasColumnName("email");
         builder.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(15).HasColumnName("phone_number");
         builder.Property(u => u.Country).HasMaxLength(50).HasColumnName("country");
         builder.Property(u => u.DateOfBirth).HasColumnName("date_of_birth");

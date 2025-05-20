@@ -1,4 +1,5 @@
 using AutoMapper;
+using Fintech.Application.ExceptionHandler;
 using Fintech.Application.Integrations;
 using Fintech.Domain.Entities;
 using Fintech.Domain.Models.Currency;
@@ -18,9 +19,9 @@ public class CurrencyService(IUnitOfWork unitOfWork, CurrencyHttpClient currency
     {
         var data = await currencyHttp.GetCurrency();
 
-        if (data == null)
+        if (!data.Any())
         {
-            throw new Exception("No currency data found");
+            throw new CurrencyDataNotFoundException("No currency data found");
         }
 
         await FillCurrencyDataAsync(data);
@@ -76,9 +77,7 @@ public class CurrencyService(IUnitOfWork unitOfWork, CurrencyHttpClient currency
     private async Task FillCurrencyDataAsync(List<CurrencyData> data)
     {
         foreach (var c in data)
-        {
             await ProcessCurrencyAsync(c);
-        }
     }
 
     private async Task ProcessCurrencyAsync(CurrencyData data)
