@@ -15,6 +15,6 @@ public interface ICardService
     Task<ServiceResult<Dictionary<string, object>>> GetCardByFilterAsync(CardFilteredRequest request);
     Task<ServiceResult> VerificationCardAsync(CardVerificationRequest request);
     Task<ServiceResult> InactiveCardAsync(InactiveCardRequest request);
-
     Task<ServiceResult> BlockCard(BlockCardRequest request);
+    public bool ValidatePan(string pan);
 }

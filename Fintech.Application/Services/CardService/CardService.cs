@@ -27,6 +27,8 @@ public class CardService(
     CardDirector cardDirector)
     : ICardService
 {
+    private readonly Random _random = new Random();
+
     public async Task<ServiceResult> BlockCard(BlockCardRequest request)
     {
         var card = await unitOfWork.CardRepository.GetByPanAsync(request.Pan);
@@ -106,19 +108,10 @@ public class CardService(
 
         return ServiceResult<CardDto>.SuccessAsCreated(cardDto, $"/api/card/{card.Id}");
     }
-
-    public Card FillCard(CreateCardRequest request)
-    {
-        var card = mapper.Map<Card>(request);
-        card.Id = Guid.NewGuid().ToString();
-        card.Pan = PanGeneratorByBrand.GeneratePan(request.CardBrand.ToString());
-        card.Cvv = GenerateCvv.Generate();
-        return card;
-    }
-
+    
     public async Task<ServiceResult<CardDto>> GetCardByPanAsync(string pan)
     {
-        if (!PanValidator.ValidatePan(pan))
+        if (!ValidatePan(pan))
             throw new NotValidPanException(ErrorMessages.NotValidPanFormat.GetMessage());
 
         var card = await unitOfWork.CardRepository.Where(x => x.Pan == pan).FirstOrDefaultAsync();
@@ -130,5 +123,87 @@ public class CardService(
         var cardDto = mapper.Map<CardDto>(card);
 
         return ServiceResult<CardDto>.Success(cardDto);
+    }
+
+    private Card FillCard(CreateCardRequest request)
+    {
+        var card = mapper.Map<Card>(request);
+        card.Id = Guid.NewGuid().ToString();
+        card.Pan = GeneratePan(request.CardBrand.ToString());
+        card.Cvv = GenerateCvv();
+        return card;
+    }
+    private string GenerateCvv()
+    {
+        Random random = new Random();
+        var result = random.Next(100, 999);
+        return result.ToString();
+    }
+    public bool ValidatePan(string pan)
+    {
+        if (pan.Length != 16)
+            return false;
+
+        string panWithoutCheckDigit = pan.Substring(0, 15); // İlk 15 rəqəm
+        char expectedCheckDigit =
+            CalculateLuhnCheckDigit(panWithoutCheckDigit).ToString()[0]; // Gözlənilən son rəqəm
+        char actualCheckDigit = pan[15]; // Əslində olan 16-cı rəqəm
+
+        return expectedCheckDigit == actualCheckDigit;
+    }
+
+    private string GeneratePan(string brand)
+    {
+        return brand switch
+        {
+            "Visa" => GenerateVisaPan(),
+            "Master" => GenerateMasterCardPan(),
+            _ => throw new ArgumentException("Invalid card brand")
+        };
+    }
+
+    private string GenerateVisaPan()
+    {
+        string bin = "400000";
+        string pan = bin + _random.Next(100000000, 999999999).ToString();
+
+        if (pan.Length > 16)
+            pan = pan.Substring(0, 16);
+
+        return pan + CalculateLuhnCheckDigit(pan);
+    }
+
+    private string GenerateMasterCardPan()
+    {
+        string bin = "510000";
+        string pan = bin + _random.Next(100000000, 999999999).ToString();
+
+        if (pan.Length > 16)
+            pan = pan.Substring(0, 16);
+
+        return pan + CalculateLuhnCheckDigit(pan);
+    }
+
+    private int CalculateLuhnCheckDigit(string pan)
+    {
+        int sum = 0;
+        bool doubleDigit = true;
+
+        for (int i = pan.Length - 1; i >= 0; i--)
+        {
+            int digit = int.Parse(pan[i].ToString());
+            if (doubleDigit)
+            {
+                digit *= 2;
+                if (digit > 9)
+                    digit -= 9;
+            }
+
+            sum += digit;
+            doubleDigit = !doubleDigit;
+        }
+
+        int mod = sum % 10;
+        return (10 - mod) % 10;
     }
 }

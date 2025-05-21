@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fintech.Repository")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00d470ed83c6364c17c44ba375362cd97307c70a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66275e80e1aef0f474550044f9988b3e2042c2b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fintech.Repository")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fintech.Repository")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

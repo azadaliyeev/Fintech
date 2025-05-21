@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using AutoMapper;
 using Fintech.Application.Directors;
 using Fintech.Application.ExceptionHandler;
@@ -28,7 +29,7 @@ public class AccountService(
     {
         var acc = await unitOfWork.AccountRepository.GetByIbanAsync(request.Iban);
 
-        if (acc is null)
+        if (acc is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.NoAnyAccountWithThisIban.GetMessage(), HttpStatusCode.NotFound);
 
         if (acc.Status == Status.Blocked.Get())
@@ -40,13 +41,13 @@ public class AccountService(
 
         return ServiceResult.Success(HttpStatusCode.NoContent);
     }
-    
+
     public async Task<ServiceResult> InactiveAccountAsync(InactiveAccountRequest request)
     {
         var acc = await unitOfWork.AccountRepository.Where(x => x.UserId == request.UserId && x.Iban == request.Iban)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync() ?? new Account();
 
-        if (acc is null)
+        if (acc is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.UserNotExistsId.GetMessage(), HttpStatusCode.NotFound);
 
         if (acc.Status == Status.Inactive.Get())
@@ -60,9 +61,10 @@ public class AccountService(
 
     public async Task<ServiceResult<Dictionary<string, object>>> GetAccountByFilter(AccountFilteredRequest request)
     {
-        var acc = await unitOfWork.AccountRepository.Where(x => x.Iban == request.Iban).FirstOrDefaultAsync();
+        var acc = await unitOfWork.AccountRepository.Where(x => x.Iban == request.Iban).FirstOrDefaultAsync() ??
+                  new Account();
 
-        if (acc is null)
+        if (acc is { Id: "" })
             return ServiceResult<Dictionary<string, object>>.Fail(ErrorMessages.NotValidIban.GetMessage(),
                 HttpStatusCode.NotFound);
 
@@ -74,9 +76,9 @@ public class AccountService(
     public async Task<ServiceResult<AccountWithCard>> GetWithCardByUserIdAsync(string userId)
     {
         var acc = await unitOfWork.AccountRepository.Where(x => x.UserId == userId)
-            .Include(x => x.User.Cards).AsNoTracking().FirstOrDefaultAsync();
+            .Include(x => x.User.Cards).AsNoTracking().FirstOrDefaultAsync() ?? new Account();
 
-        if (acc is null)
+        if (acc is { Id: "" })
             return ServiceResult<AccountWithCard>.Fail(ErrorMessages.UserNotExistsId.GetMessage(),
                 HttpStatusCode.NotFound);
 
@@ -119,7 +121,6 @@ public class AccountService(
         var bankCode = "FNTC";
         var countryCode = "AZ";
 
-        //var initialIban = countryCode + "00" + bankCode + bankAccountNumber;
         string countryCodeNumeric = "";
 
         foreach (var c in countryCode)
@@ -169,7 +170,7 @@ public class AccountService(
 
     public async Task<ServiceResult<AccountDto>> GetAccountByIbanAsync(string iban)
     {
-        if (!IbanValidator.IsValid(iban))
+        if (!IsValidIban(iban))
             throw new NotValidIbanException(ErrorMessages.NotValidIban.GetMessage());
 
         var acc = await unitOfWork.AccountRepository.Where(x => x.Iban == iban).FirstOrDefaultAsync();
@@ -221,5 +222,43 @@ public class AccountService(
         var accountsAsDto = mapper.Map<List<AccountDto>>(accounts);
 
         return ServiceResult<List<AccountDto>>.Success(accountsAsDto);
+    }
+    
+    public bool IsValidIban(string iban)
+    {
+        if (string.IsNullOrEmpty(iban))
+            return false;
+
+
+        iban = iban.Replace(" ", "").ToUpper();
+
+        if (iban.Length != 28 || !iban.StartsWith("AZ"))
+            return false;
+
+        var rearrangedIban = iban.Substring(4) + iban.Substring(0, 4);
+
+        var numericIban = new StringBuilder();
+
+        foreach (var c in rearrangedIban)
+        {
+            if (char.IsLetter(c))
+                numericIban.Append((c - 'A' + 10).ToString());
+            else if (char.IsDigit(c))
+                numericIban.Append(c);
+            else
+                return false;
+        }
+
+
+        var number = numericIban.ToString();
+        var remainder = 0;
+
+        foreach (char digit in number)
+        {
+            int digitValue = digit - '0';
+            remainder = (remainder * 10 + digitValue) % 97;
+        }
+
+        return remainder == 1;
     }
 }

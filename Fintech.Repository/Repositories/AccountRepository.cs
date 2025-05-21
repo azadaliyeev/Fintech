@@ -25,8 +25,8 @@ public class AccountRepository(FintechDbContext context, Lazy<IDbConnection> con
 
     public IQueryable<Account> Where(Expression<Func<Account, bool>> predicate) => Context.Accounts.Where(predicate);
 
-    public async Task<Account?> GetByIbanAsync(string iban) =>
-        await Context.Accounts.FirstOrDefaultAsync(x => x.Iban == iban);
+    public async Task<Account> GetByIbanAsync(string iban) =>
+        await Context.Accounts.FirstOrDefaultAsync(x => x.Iban == iban) ?? new Account();
 
     public async Task BlockAccountsByUserIdAsync(string userId, string status)
     {

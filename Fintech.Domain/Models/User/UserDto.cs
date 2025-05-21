@@ -6,4 +6,4 @@ public record UserDto(string Id,
     string Email,
     string PhoneNumber,
     string Country,
-    DateTime DateOfBirth);
+    DateTime? DateOfBirth);

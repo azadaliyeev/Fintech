@@ -1,3 +1,4 @@
+using Fintech.Domain.Models.User;
 using Fintech.Domain.Models.User.FilteredRequest;
 using Fintech.Domain.Models.User.Update;
 using Fintech.Domain.Models.User.Verification;
@@ -48,4 +49,9 @@ public class UserController(IUserService userService) : CustomBaseController
     [HttpDelete("{userId}")]
     public async Task<IActionResult> DeleteUser(string userId) =>
         CreateActionResult(await userService.DeleteUserAsync(userId));
+
+
+    [HttpGet("filtered:2")]
+    public async Task<IActionResult> GetUsersByFilter2([FromQuery] UserDto request) =>
+        CreateActionResult(await userService.GetFiltered(request));
 }

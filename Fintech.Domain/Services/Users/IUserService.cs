@@ -26,4 +26,7 @@ public interface IUserService
     Task<ServiceResult> DeleteUserAsync(string userId);
 
     Task CheckUserVerificationAsync();
+
+
+    Task<ServiceResult<UserDto>> GetFiltered(UserDto request);
 }

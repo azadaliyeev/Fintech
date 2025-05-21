@@ -1,6 +1,7 @@
 using System.Data;
 using System.Linq.Expressions;
 using Fintech.Domain.Entities;
+using Fintech.Domain.Models.User;
 using Fintech.Domain.Repositories;
 using Fintech.Repository.DbCotext;
 using Microsoft.EntityFrameworkCore;
@@ -54,4 +55,6 @@ public class UserRepository(FintechDbContext context, Lazy<IDbConnection> connec
                 .SetProperty(x => x.LastName, (string?)null)
                 .SetProperty(x => x.Email, (string?)null));
     }
+
+    
 }

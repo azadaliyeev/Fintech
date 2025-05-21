@@ -1,6 +1,8 @@
 using System.Net;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Fintech.Application.Directors;
+using Fintech.Application.Patterns.BuilderPattern.QueryDirector;
 using Fintech.Domain.Entities;
 using Fintech.Domain.Models.User;
 using Fintech.Domain.Models.User.FilteredRequest;
@@ -25,8 +27,30 @@ public class UserService(
     IVerificationTokenService verificationTokenService,
     IEmailService emailService,
     UserDirector userDirector,
-    IMapper mapper) : IUserService
+    IMapper mapper,
+    UserQueryDirector queryDirector) : IUserService
 {
+    public async Task<ServiceResult<UserDto>> GetFiltered(UserDto request)
+    {
+        var user = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
+
+        if (user is { Id: "" })
+            return ServiceResult<UserDto>.Fail(ErrorMessages.UserNotExistsId.GetMessage());
+
+
+        var source = unitOfWork.UserRepository.GetAll();
+
+        var str1 = source.ToQueryString();
+
+        var query = queryDirector.MakeQuery(request, source);
+
+        var str2 = query.ToQueryString();
+        
+        var dto = await query.ProjectTo<UserDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync();
+        
+        return ServiceResult<UserDto>.Success(dto);
+    }
+
     public async Task CheckUserVerificationAsync()
     {
         var users = await unitOfWork.UserRepository.GetAll()
@@ -112,7 +136,7 @@ public class UserService(
             return ServiceResult.Fail(result.Message!);
 
         var user = await unitOfWork.UserRepository.GetByIdAsync(result.UserId!);
-        user!.Password = request.Password;
+        user.Password = request.Password;
         var passwordHasher = new PasswordHasher<User>();
         user.Password = passwordHasher.HashPassword(user, user.Password);
 
@@ -134,7 +158,7 @@ public class UserService(
 
         var verificationToken = await verificationTokenService.CreateTokenAsync(userId);
 
-        await emailService.SendResetPasswordEmailAsync(user.Email, $"{user.FirstName},{user.LastName}",
+        await emailService.SendResetPasswordEmailAsync(user.Email!, $"{user.FirstName},{user.LastName}",
             verificationToken.Token);
 
         return ServiceResult.Success(SuccesMessages.ResetPasswordEmailSent.Get());
@@ -144,7 +168,7 @@ public class UserService(
     {
         var existingUser = await unitOfWork.UserRepository.GetByIdAsync(request.UserId);
 
-        if (existingUser is null)
+        if (existingUser is { Id: "" })
             return ServiceResult.Fail(ErrorMessages.UserNotExistsId.GetMessage());
 
         mapper.Map(request, existingUser);
@@ -195,7 +219,7 @@ public class UserService(
 
         var user = await unitOfWork.UserRepository.GetByIdAsync(result.UserId!);
 
-        user!.IsVerified = true;
+        user.IsVerified = true;
 
         unitOfWork.UserRepository.Update(user);
         await unitOfWork.CommitAsync();

@@ -12,7 +12,7 @@ public interface IAccountRepository
     IQueryable<Account> GetAll();
     IQueryable<Account> Where(Expression<Func<Account, bool>> predicate);
 
-    Task<Account?> GetByIbanAsync(string iban);
+    Task<Account> GetByIbanAsync(string iban);
 
     Task BlockAccountsByUserIdAsync(string userId, string status);
 

@@ -23,4 +23,6 @@ public interface IAccountService
     Task<ServiceResult<AccountWithCard>> GetWithCardByUserIdAsync(string userId);
 
     Task<ServiceResult> BlockAccountAsync(BlockAccountRequest request);
+
+    bool IsValidIban(string iban);
 }
