@@ -23,7 +23,7 @@ public class TransactionRepository(FintechDbContext context, Lazy<IDbConnection>
         throw new NotImplementedException();
     }
 
-    public Task GetByIdAsync(string id)
+    public Task<Transaction> GetByTransactionId(string id)
     {
         throw new NotImplementedException();
     }

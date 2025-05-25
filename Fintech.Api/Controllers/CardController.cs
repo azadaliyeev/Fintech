@@ -3,12 +3,14 @@ using Fintech.Domain.Models.Card.Create;
 using Fintech.Domain.Models.Card.FilteredRequest;
 using Fintech.Domain.Models.Card.Inactive;
 using Fintech.Domain.Models.Card.Verification;
+using Fintech.Domain.Models.Payments.Requests;
 using Fintech.Domain.Services.Cards;
+using Fintech.Domain.Services.Payments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintech.Api.Controllers;
 
-public class CardController(ICardService cardService) : CustomBaseController
+public class CardController(ICardService cardService, ICheckProcess checkProcess) : CustomBaseController
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateCardRequest request)
@@ -33,4 +35,9 @@ public class CardController(ICardService cardService) : CustomBaseController
     [HttpPut("block")]
     public async Task<IActionResult> BlockCard(BlockCardRequest request) =>
         CreateActionResult(await cardService.BlockCard(request));
+
+
+    [HttpGet("checkcards")]
+    public async Task<IActionResult> CheckCardsWithPan([FromQuery]CheckCardRequest request) =>
+        CreateActionResult(await checkProcess.CheckCardAsync(request.ToPan, request.FromPan));
 }

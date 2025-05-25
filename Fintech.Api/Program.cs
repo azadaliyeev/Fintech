@@ -23,10 +23,6 @@ builder.Services.AddControllers(opt =>
 });
 
 
-
-
-
-
 // .AddJsonOptions(opt =>
 //       opt.JsonSerializerOptions.Converters.Add(
 //           new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false)));

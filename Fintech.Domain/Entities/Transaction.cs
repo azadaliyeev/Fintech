@@ -3,6 +3,7 @@ namespace Fintech.Domain.Entities;
 public class Transaction
 {
     public string Id { get; set; } = null!;
+    public string TransactionId { get; set; }
     public DateTime CreateDate { get; set; }
     public string TransactionType { get; set; } = null!;
     public string TransactionStatus { get; set; } = null!;

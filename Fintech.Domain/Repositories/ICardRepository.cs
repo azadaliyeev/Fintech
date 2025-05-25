@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Fintech.Domain.Entities;
+using Fintech.Domain.Models.Payments.Responses;
 
 namespace Fintech.Domain.Repositories;
 
@@ -9,10 +10,12 @@ public interface ICardRepository
     void Update(Card card);
     void DeleteAsync(Card card);
     Task<Card?> GetByIdAsync(string id);
-
+    IQueryable<Card> GetAll();
     IQueryable<Card> Where(Expression<Func<Card, bool>> predicate);
 
     Task<Card?> GetByPanAsync(string pan);
 
-    Task BlockCardsByUserIdAsync(string userId,string status);
+    IQueryable<CheckCardResponse> CheckCards(string toPan, string fromPan);
+
+    Task BlockCardsByUserIdAsync(string userId, string status);
 }

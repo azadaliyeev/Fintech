@@ -11,6 +11,7 @@ using Fintech.Application.Services.Authentication;
 using Fintech.Application.Services.CardService;
 using Fintech.Application.Services.CurrencyService;
 using Fintech.Application.Services.EmailService;
+using Fintech.Application.Services.Payments;
 using Fintech.Application.Services.UserService;
 using Fintech.Application.Services.VerificationTokenService;
 using Fintech.Domain.Builders;
@@ -20,6 +21,7 @@ using Fintech.Domain.Services.Authentication;
 using Fintech.Domain.Services.Cards;
 using Fintech.Domain.Services.Currency;
 using Fintech.Domain.Services.Email;
+using Fintech.Domain.Services.Payments;
 using Fintech.Domain.Services.Users;
 using Fintech.Domain.Services.VerificationToken;
 using FluentValidation;
@@ -33,8 +35,9 @@ public static class ApplicationExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        
-        
+        services.AddScoped<ICheckProcess, CheckProcess>();
+        services.AddScoped<IPaymentCardToCard, PaymentCardToCard>();
+
         services.AddHostedService<CurrencyBackgroundService>();
         services.AddHostedService<CheckUserVerifiedBackgroundService>();
 
@@ -46,7 +49,7 @@ public static class ApplicationExtensions
         services.AddHttpClient();
 
         services.AddScoped<UserQueryDirector>();
-        
+
         services.AddScoped<IUserQueryBuilder, UserQueryBuilder>();
         services.AddScoped<ICurrencyService, CurrencyService>();
         services.AddScoped<IEmailService, EmailService>();

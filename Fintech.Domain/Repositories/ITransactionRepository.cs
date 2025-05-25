@@ -7,5 +7,5 @@ public interface ITransactionRepository
     Task AddAsync(Transaction transaction);
     Task UpdateAsync(Transaction transaction);
     Task DeleteAsync(Transaction transaction);
-    Task GetByIdAsync(string id);
+    Task<Transaction> GetByTransactionId(string transactionId);
 }

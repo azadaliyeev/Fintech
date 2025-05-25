@@ -1,6 +1,7 @@
 using System.Reflection;
 using Fintech.Domain.Entities;
 using Fintech.Domain.Entities.EntityConfiguration;
+using Fintech.Domain.Models.Payments.Responses;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fintech.Repository.DbCotext;
@@ -15,6 +16,7 @@ public class FintechDbContext(DbContextOptions<FintechDbContext> options) : DbCo
 
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<VerificationToken> VerificationTokens { get; set; }
+    public DbSet<CheckCardResponse> CheckCardResponses { get; set; }
 
     public DbSet<Currency> Currencies { get; set; }
     
